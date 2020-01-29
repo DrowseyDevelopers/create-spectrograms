@@ -1,3 +1,9 @@
+# Add other dirs to ignore based on IDE
+## PyCharm
+.idea/
+.DS_Store
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
