@@ -25,5 +25,7 @@ If so to get spectrogram image files run command:
 python3 __main__.py
 ```
 
-Output Spectrogram files should be generated and output to directory
-**create-spectrogram/output**
+Output Spectrogram files should be generated in directory **output**
+```
+create-spectrogram/output/
+```
