@@ -80,7 +80,6 @@ def create_output_directory(output_path):
     :param output_path: path of the output files we want to create e.g. './output'
     :return None:
     """
-
     if os.path.isdir(output_path):
         shutil.rmtree(output_path, ignore_errors=True)
 
@@ -92,11 +91,13 @@ def main():
     Main Entrance of program
     :return None:
     """
-
+    # get all files in input files directory
     all_files = get_all_data_files()
 
+    # create directory where we will output short-time fourier transform images of input data files.
     create_output_directory(OUTPUT_PATH)
 
+    # iterate through all input data files to generate spectrogram image files
     for data_file in all_files:
 
         data = load_data_from_file(data_file)
