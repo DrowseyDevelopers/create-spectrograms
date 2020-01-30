@@ -29,9 +29,20 @@ thus (4-17)x(:)
 
 
 def get_data_files():
-    for dirname, _, filenames in os.walk('/kaggle/input'):
+    """
+    Function used to get string values of all files in a directory e.g.
+    /create-spectrograms/data/eeg_record1.mat,
+    /create-spectrograms/data/eeg_record2.mat, etc.
+    :return all_files: list of string values of all files in a directory
+    """
+    all_files = []
+
+    for dirname, _, filenames in os.walk(DATA_FILES_PATH):
         for filename in filenames:
-            print(os.path.join(dirname, filename))
+            complete_path_to_file = os.path.join(dirname, filename)
+            all_files.append(complete_path_to_file)
+
+    return all_files
 
 
 def main():
@@ -39,7 +50,8 @@ def main():
     Main Entrance of program
     :return None:
     """
-    print(CWD)
+    get_data_files()
+    exit(0)
 
     raw_file = scipy.io.loadmat('{0}/data/eeg_record30.mat'.format(CWD))
     obj = raw_file['o']
