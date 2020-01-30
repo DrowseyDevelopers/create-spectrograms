@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
 
-# imports to make spectrogram images
-from scipy import signal
-from scipy.fft import fftshift
+from scipy import signal        # imports to make spectrogram images
 import matplotlib.pyplot as plt
 
-
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn.preprocessing import StandardScaler
-import numpy as np # linear algebra
-import os # accessing directory structure
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import numpy as np
+import os
+import pandas as pd             # data processing
 import scipy.io
 
 KEYS = ['id', 'tag', 'nS', 'sampFreq', 'marker', 'timestamp', 'data', 'trials']
