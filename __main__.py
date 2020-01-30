@@ -14,6 +14,7 @@ CWD = os.path.dirname(os.path.realpath(__file__))
 
 DATA_FILES_PATH = os.path.join(CWD, 'data') # constant representing directory path to data files
 OUTPUT_PATH = os.path.join(CWD, 'output')   # constant representing directory of generated files
+README = 'README'
 FREQUENCY = 128                             # frequency rate is 128Hz
 M = 1920                                    # M = frequency * delta_time = 128 Hz * 15 seconds
 MAX_AMP = 2                                 # Max amplitude for short-time fourier transform graph
@@ -30,6 +31,10 @@ def get_all_data_files():
 
     for dirname, _, filenames in os.walk(DATA_FILES_PATH):
         for filename in filenames:
+
+            # ignore README.md file from data directory
+            if README in filename:
+                continue
             # Example: complete_path_to_file = /create-spectrograms/data/eeg_record1.mat
             complete_path_to_file = os.path.join(dirname, filename)
             all_files.append(complete_path_to_file)
