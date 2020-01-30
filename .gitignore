@@ -1,6 +1,3 @@
-# ignore input files directory
-data/
-
 # ignore output files directory
 output/
 
