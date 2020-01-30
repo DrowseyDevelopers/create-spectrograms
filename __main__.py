@@ -61,7 +61,7 @@ def load_data_from_file(path_to_file):
     return data
 
 
-def generate_stft_from_from_data(channel, fs, m, max_amp, data):
+def generate_stft_from_data(channel, fs, m, max_amp, data):
     """
     Function used to generate the Fast-Time Fourier Transform (stft) from data
     :param channel: which channel of the data we are analyzing. Integer value between 0 - 24
@@ -90,7 +90,7 @@ def main():
     for data_file in all_files:
 
         data = load_data_from_file(data_file)
-        generate_stft_from_from_data(3, FREQUENCY, M, MAX_AMP, data)
+        generate_stft_from_data(3, FREQUENCY, M, MAX_AMP, data)
         print(data_file)
         break
 
