@@ -8,7 +8,7 @@ Electroencephalography (EEG) data, to either represent the
 'focused', 'unfocused' or 'drowsey' attention state.
 
 
-Repository used to generate spectrograms from EEG data.
+create-spectrograms repo used to generate spectrograms from EEG data.
 ```
     Module to take in .mat MatLab files and generate spectrogram images via Short Time Fourier Transform
          ----------          ------------------------------          --------------------
@@ -16,12 +16,12 @@ Repository used to generate spectrograms from EEG data.
          ----------          ------------------------------          --------------------
 ```
 
-Input Matlab Files
+**Input:** Matlab Files
 ```
 create-spectrogram/data/*.mat
 ```
 
-Output Spectrogram files should be generated in directory **output**
+**Output:** Spectrogram files generated in directory **output**
 ```
 create-spectrogram/output/
 ```
