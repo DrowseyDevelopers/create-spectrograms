@@ -50,3 +50,30 @@ If so to get spectrogram image files run command:
 python3 __main__.py
 ```
 
+## Data Columns -> Channel Mapping
+MatLab Columns
+```
+5 -> F7
+6 -> F3
+9 -> P7
+10 -> O1
+11 -> O2
+12 -> P8
+17 -> AF4
+```
+
+Python
+```
+4 -> F7
+5 -> F3
+8 -> P7
+9 -> O1
+10 -> O2
+11 -> P8
+16 -> AF4
+```
+
+columns
+5, 6, 9, 10, 11, 12, 17
+
+
