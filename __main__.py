@@ -98,15 +98,20 @@ def main():
     # get all files in input files directory
     all_files = get_all_data_files()
 
-    # create directory where we will output short-time fourier transform images of input data files.
+    # create directory where we will output short-time fourier transform images to output to
     create_output_directory(OUTPUT_PATH)
 
     # iterate through all input data files to generate spectrogram image files
     for data_file in all_files:
 
+        # data from a single file
         data = load_data_from_file(data_file)
+
+        # name of the output image file
         output_basename = os.path.basename(data_file)
         output_basename = output_basename.split('.')[0]
+
+        # full path location of the output image file
         output_filepath = os.path.join(CWD, 'output', output_basename)
 
         generate_stft_from_data(3, FREQUENCY, M, MAX_AMP, data, output_filepath)
