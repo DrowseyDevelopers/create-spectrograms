@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+    Module to take in .mat MatLab files and generate spectrogram images via Short Time Fourier Transform
+         ----------          ------------------------------          --------------------
+        | Data.mat |    ->  | Short-Time Fourier Transform |    ->  | Spectrogram Images |
+         ----------          ------------------------------          --------------------
+"""
 
 from scipy import signal        # imports to make spectrogram images
 import matplotlib.pyplot as plt
