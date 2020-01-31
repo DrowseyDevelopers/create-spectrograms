@@ -117,10 +117,21 @@ def main():
         output_basename = os.path.basename(data_file)
         output_basename = output_basename.split('.')[0]
 
-        # full path location of the output image file
-        output_filepath = os.path.join(CWD, 'output', output_basename)
+        # full path location of directory we want to create for data file we are analyzing
+        output_dirpath = os.path.join(OUTPUT_PATH, output_basename)
 
-        generate_stft_from_data(3, FREQUENCY, M, MAX_AMP, data, output_filepath)
+        # make a directory for data file being analyzed in order to generate images for all channels of data file.
+        # e.g. ./output/eeg_record2/
+        os.mkdir(output_dirpath)
+
+        # generating all spectrogram files for all channels of a single EEG data file
+        # e.g. ./output/eeg_record2/3.png
+        #      ./output/eeg_record2/4.png
+        #      ...
+        #      ./output/eeg_record2/16.png
+        for index in range(3, 17):
+            channel_output_name = '{path}/{channel_index}'.format(path=output_dirpath, channel_index=index)
+            generate_stft_from_data(index, FREQUENCY, M, MAX_AMP, data, channel_output_name)
 
 
 if __name__ == '__main__':
