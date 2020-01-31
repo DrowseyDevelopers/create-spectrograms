@@ -33,6 +33,16 @@ recursively. Thus:
 git clone https://github.com/DrowseyDevelopers/create-spectrograms.git --recursive
 ```
 
+## Software Requirements
+There are a few python packages that should be installed in order to get
+the software running. Packages can be installed via **pip3**
+```
+scipy==1.4.1
+matplotlib==3.1.1
+numpy==1.17.3
+pandas==0.25.2
+```
+
 ## Generate Spectrogram Images
 You need to make sure to have the **data** repository at **create-spectrogram/data**.
 If so to get spectrogram image files run command:
