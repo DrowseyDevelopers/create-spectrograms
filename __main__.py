@@ -22,8 +22,9 @@ DATA_FILES_PATH = os.path.join(CWD, 'data') # constant representing directory pa
 OUTPUT_PATH = os.path.join(CWD, 'output')   # constant representing directory of generated files
 MAT = '.mat'
 FREQUENCY = 128                             # frequency rate is 128Hz
-M = 1920                                    # M = frequency * delta_time = 128 Hz * 15 seconds
+M = 128                                     # M = frequency * delta_time = 128 Hz * 15 seconds
 MAX_AMP = 2                                 # Max amplitude for short-time fourier transform graph
+CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
 
 def get_all_data_files():
@@ -54,9 +55,9 @@ def load_data_from_file(path_to_file):
     :return data: numpy 2-D array 25x308868 to represent all data points gathered in 25 channels
     """
     raw_file = scipy.io.loadmat(path_to_file)
-    raw_data = pd.DataFrame.from_dict(raw_file['o']['data'][0, 0])
+    raw_data = raw_file['o'][0, 0]
 
-    data = pd.DataFrame(raw_data).to_numpy()
+    data = raw_data[6]
 
     return data
 
@@ -78,6 +79,27 @@ def generate_stft_from_data(channel, fs, m, max_amp, data, output_filepath):
     plt.title('STFT Magnitude')
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
+
+    plt.savefig(output_filepath)
+
+
+def generate_spectrogram_from_data(channel, fs, m, data, output_filepath):
+    """
+    Function used to generate Spectogram images
+    :param channel: channel of the data we are analyzing
+    :param fs: frequency sample rate e.g. 128 Hz
+    :param m: total number of points in window e.g. 128
+    :param data: complete dataset from an input file
+    :param output_filepath: path to export file of spectrogram
+    :return None:
+    """
+    f, t, Sxx = signal.spectrogram(data[:, channel], fs, window=signal.tukey(m, 0.25))
+
+    plt.pcolormesh(t, f, np.log10(Sxx))
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    plt.title('Lead: {0}'.format(str(channel)))
+    plt.set_cmap('rainbow')
 
     plt.savefig(output_filepath)
 
@@ -125,13 +147,15 @@ def main():
         os.mkdir(output_dirpath)
 
         # generating all spectrogram files for all channels of a single EEG data file
-        # e.g. ./output/eeg_record2/3.png
-        #      ./output/eeg_record2/4.png
+        # e.g. ./output/eeg_record2/4.png
+        #      ./output/eeg_record2/5.png
         #      ...
         #      ./output/eeg_record2/16.png
-        for index in range(3, 17):
-            channel_output_name = '{path}/{channel_index}'.format(path=output_dirpath, channel_index=index)
-            generate_stft_from_data(index, FREQUENCY, M, MAX_AMP, data, channel_output_name)
+        for channel in CHANNELS:
+            channel_output_name = '{path}/{channel_index}'.format(path=output_dirpath, channel_index=str(channel))
+            generate_spectrogram_from_data(channel, FREQUENCY, M, data, channel_output_name)
+            break
+        break
 
 
 if __name__ == '__main__':
