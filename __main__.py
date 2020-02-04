@@ -20,6 +20,7 @@ CWD = os.path.dirname(os.path.realpath(__file__))
 
 DATA_FILES_PATH = os.path.join(CWD, 'data') # constant representing directory path to data files
 OUTPUT_PATH = os.path.join(CWD, 'output')   # constant representing directory of generated files
+TIME_DOMAIN_OUTPUT_PATH = os.path.join(CWD, 'time-domain-output')
 MAT = '.mat'
 FREQUENCY = 128                             # frequency rate is 128Hz
 M = 128                                     # M = frequency * delta_time = 128 Hz * 15 seconds
@@ -104,6 +105,25 @@ def generate_spectrogram_from_data(channel, fs, m, data, output_filepath):
     plt.savefig(output_filepath)
 
 
+def generate_graph_from_data(channel, data, output_filepath):
+    """
+    Function used to generate time domain graph from channel data
+    :param channel: specific channel lead we are analyzing
+    :param data: complete dataset from an input file
+    :param output_filepath: path to export file of time domain data
+    :return None:
+    """
+    x = np.linspace(0, len(data[:, channel]) / 512., len(data[:, channel]))
+    y = data[:, channel]
+
+    plt.plot(x, y)
+    plt.title('Lead: {}'.format(str(channel)))
+    plt.xlabel('Time [secs]')
+    plt.ylabel('MicroVolts [muV]')
+
+    plt.savefig(output_filepath)
+
+
 def create_output_directory(output_path):
     """
     Function used to create the output directory for Short-Time Fourier Transform
@@ -129,6 +149,9 @@ def main():
     # create directory where we will output short-time fourier transform images to output to
     create_output_directory(OUTPUT_PATH)
 
+    # create directory where we will output time domain graphs
+    create_output_directory(TIME_DOMAIN_OUTPUT_PATH)
+
     # iterate through all input data files to generate spectrogram image files
     for data_file in all_files:
 
@@ -142,9 +165,15 @@ def main():
         # full path location of directory we want to create for data file we are analyzing
         output_dirpath = os.path.join(OUTPUT_PATH, output_basename)
 
+        # full path location of directory we want to create for time domain graph
+        output_graph_dirpath = os.path.join(TIME_DOMAIN_OUTPUT_PATH, output_basename)
+
         # make a directory for data file being analyzed in order to generate images for all channels of data file.
         # e.g. ./output/eeg_record2/
         os.mkdir(output_dirpath)
+
+        # e.g. ./time-domain-output/eeg_record2/
+        os.mkdir(output_graph_dirpath)
 
         # generating all spectrogram files for all channels of a single EEG data file
         # e.g. ./output/eeg_record2/4.png
@@ -153,9 +182,9 @@ def main():
         #      ./output/eeg_record2/16.png
         for channel in CHANNELS:
             channel_output_name = '{path}/{channel_index}'.format(path=output_dirpath, channel_index=str(channel))
+            time_graph_output_name = '{0}/{1}'.format(output_graph_dirpath, str(channel))
             generate_spectrogram_from_data(channel, FREQUENCY, M, data, channel_output_name)
-            break
-        break
+            generate_graph_from_data(channel, data, time_graph_output_name)
 
 
 if __name__ == '__main__':

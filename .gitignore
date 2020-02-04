@@ -1,5 +1,6 @@
 # ignore output files directory
 output/
+time-domain-output/
 
 # Add other dirs to ignore based on IDE
 ## PyCharm
