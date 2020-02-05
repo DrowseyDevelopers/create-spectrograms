@@ -14,6 +14,7 @@ import numpy as np
 import os
 import pandas as pd             # data processing
 import scipy.io
+import argparse
 
 KEYS = ['id', 'tag', 'nS', 'sampFreq', 'marker', 'timestamp', 'data', 'trials']
 CWD = os.path.dirname(os.path.realpath(__file__))
@@ -27,6 +28,14 @@ M = 128                                     # M = frequency * delta_time = 128 H
 MAX_AMP = 2                                 # Max amplitude for short-time fourier transform graph
 CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
+
+def handle_arguments():
+    parser = argparse.ArgumentParser(description='Split EEG data preprocess and create spectrograms')
+
+    parser.add_argument('-s', '--split', action='store_true', default=False,
+            help='Flag used to split the data: Focused, Unfocused, and Drowsy datasets')
+
+    return parser.parse_args()
 
 def get_all_data_files():
     """
@@ -94,13 +103,13 @@ def generate_spectrogram_from_data(channel, fs, m, data, output_filepath):
     :param output_filepath: path to export file of spectrogram
     :return None:
     """
-    f, t, Sxx = signal.spectrogram(data[:, channel], fs, window=signal.tukey(m, 0.25))
+    f, t, Sxx = signal.spectrogram(data[0:76800, channel], fs, noverlap=230, window=signal.tukey(256, 0.25))
 
     plt.pcolormesh(t, f, np.log10(Sxx))
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
     plt.title('Lead: {0}'.format(str(channel)))
-    plt.set_cmap('rainbow')
+    plt.set_cmap('jet')
 
     plt.savefig(output_filepath)
 
@@ -143,6 +152,8 @@ def main():
     Main Entrance of program
     :return None:
     """
+    args = handle_arguments()
+
     # get all files in input files directory
     all_files = get_all_data_files()
 
@@ -173,7 +184,7 @@ def main():
         os.mkdir(output_dirpath)
 
         # e.g. ./time-domain-output/eeg_record2/
-        os.mkdir(output_graph_dirpath)
+        #os.mkdir(output_graph_dirpath)
 
         # generating all spectrogram files for all channels of a single EEG data file
         # e.g. ./output/eeg_record2/4.png
@@ -185,6 +196,8 @@ def main():
             #time_graph_output_name = '{0}/{1}'.format(output_graph_dirpath, str(channel))
             generate_spectrogram_from_data(channel, FREQUENCY, M, data, channel_output_name)
             #generate_graph_from_data(channel, data, time_graph_output_name)
+            break
+        break
 
 
 if __name__ == '__main__':
