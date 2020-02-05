@@ -15,12 +15,19 @@ import os
 import pandas as pd             # data processing
 import scipy.io
 import argparse
+import csv
 
 KEYS = ['id', 'tag', 'nS', 'sampFreq', 'marker', 'timestamp', 'data', 'trials']
 CWD = os.path.dirname(os.path.realpath(__file__))
 
+# Ranges of data points representing a certain mental state e.g. focused, unfocused or drowsy
+FOCUSED_DATA = [0, 76801]
+UNFOCUSED_DATA = [76801, 153600]
+DROWSEY_DATA = [153601, 230400]
+
 DATA_FILES_PATH = os.path.join(CWD, 'data') # constant representing directory path to data files
 OUTPUT_PATH = os.path.join(CWD, 'output')   # constant representing directory of generated files
+STATE_DATA_OUTPUT = os.path.join(CWD, 'state-data')
 TIME_DOMAIN_OUTPUT_PATH = os.path.join(CWD, 'time-domain-output')
 MAT = '.mat'
 FREQUENCY = 128                             # frequency rate is 128Hz
@@ -30,12 +37,67 @@ CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
 
 def handle_arguments():
+    """
+    Function used to set the arguments that can be passed to the script
+    :return: the Parsed arguments
+    """
     parser = argparse.ArgumentParser(description='Split EEG data preprocess and create spectrograms')
 
-    parser.add_argument('-s', '--split', action='store_true', default=False,
+    parser.add_argument('-s', '--split', action='store_true', default=False, dest='split_data',
             help='Flag used to split the data: Focused, Unfocused, and Drowsy datasets')
 
     return parser.parse_args()
+
+
+def output_data_to_csv(output_dir, data, state, filename):
+    """
+    Function used to parse out focused data and output it into csv files
+    :param output_dir: directory to output data
+    :param data: to output to csv
+    :param state: state we are outputtin to csv e.g., focused, unfocused or drowsy
+    :param filename: name of file we are writing data to
+    :return None:
+    """
+    parsed_data = np.array(data[range(state[0], state[1])])
+    output_path = os.path.join(output_dir, filename)
+
+    np.savetxt(output_path, parsed_data, delimiter=',')
+
+
+def handle_split_data(input_files, channels):
+    """
+    Function used to handle the split of data by mental state
+    :return:
+    """
+    # create directory where we will output split data
+    create_output_directory(STATE_DATA_OUTPUT)
+
+    for data_file in input_files:
+        # data from a single file
+        data = load_data_from_file(data_file)
+
+        # name of the output image file
+        output_basename = os.path.basename(data_file)
+        output_basename = output_basename.split('.')[0]
+
+        # full path location of directory we want to create for data file we are analyzing
+        output_dirpath = os.path.join(STATE_DATA_OUTPUT, output_basename)
+
+        # make a directory for data file being analyzed in order to generate images for all channels of data file.
+        # e.g. ./output/eeg_record2/
+        os.mkdir(output_dirpath)
+
+        for channel in channels:
+            channel_dir = os.path.join(output_dirpath, str(channel))
+            os.mkdir(channel_dir)
+
+            output_data_to_csv(channel_dir, data[:, channel], FOCUSED_DATA, 'FOCUSED')
+            output_data_to_csv(channel_dir, data[:, channel], UNFOCUSED_DATA, 'UNFOCUSED')
+            output_data_to_csv(channel_dir, data[:, channel], DROWSEY_DATA, 'DROWSY')
+
+
+
+
 
 def get_all_data_files():
     """
@@ -157,6 +219,11 @@ def main():
     # get all files in input files directory
     all_files = get_all_data_files()
 
+
+    if args.split_data:
+        handle_split_data(all_files, CHANNELS)
+
+    exit(0)
     # create directory where we will output short-time fourier transform images to output to
     create_output_directory(OUTPUT_PATH)
 
