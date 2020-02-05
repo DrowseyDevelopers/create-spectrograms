@@ -44,7 +44,7 @@ def handle_arguments():
     parser = argparse.ArgumentParser(description='Split EEG data preprocess and create spectrograms')
 
     parser.add_argument('-s', '--split', action='store_true', default=False, dest='split_data',
-            help='Flag used to split the data: Focused, Unfocused, and Drowsy datasets')
+            help='Flag used to split the data: Focused, Unfocused, and Drowsy data sets')
 
     return parser.parse_args()
 
@@ -58,8 +58,15 @@ def output_data_to_csv(output_dir, data, state, filename):
     :param filename: name of file we are writing data to
     :return None:
     """
-    parsed_data = np.array(data[range(state[0], state[1])])
+
     output_path = os.path.join(output_dir, filename)
+
+    try:
+        parsed_data = np.array(data[range(state[0], state[1])])
+    except IndexError as e:
+        print('File: {0}'.format(output_path))
+        print('Size: {0}'.format(len(data)))
+        return
 
     np.savetxt(output_path, parsed_data, delimiter=',')
 
