@@ -86,7 +86,7 @@ def generate_stft_from_data(channel, fs, m, max_amp, data, output_filepath):
 
 def generate_spectrogram_from_data(channel, fs, m, data, output_filepath):
     """
-    Function used to generate Spectogram images
+    Function used to generate Spectrogram images
     :param channel: channel of the data we are analyzing
     :param fs: frequency sample rate e.g. 128 Hz
     :param m: total number of points in window e.g. 128
@@ -116,7 +116,7 @@ def generate_graph_from_data(channel, data, output_filepath):
     x = np.linspace(0, len(data[:, channel]) / 512., len(data[:, channel]))
     y = data[:, channel]
 
-    plt.plot(x, y)
+    plt.plot(x, y, color='blue')
     plt.title('Lead: {}'.format(str(channel)))
     plt.xlabel('Time [secs]')
     plt.ylabel('MicroVolts [muV]')
@@ -150,7 +150,7 @@ def main():
     create_output_directory(OUTPUT_PATH)
 
     # create directory where we will output time domain graphs
-    create_output_directory(TIME_DOMAIN_OUTPUT_PATH)
+    #create_output_directory(TIME_DOMAIN_OUTPUT_PATH)
 
     # iterate through all input data files to generate spectrogram image files
     for data_file in all_files:
@@ -182,9 +182,9 @@ def main():
         #      ./output/eeg_record2/16.png
         for channel in CHANNELS:
             channel_output_name = '{path}/{channel_index}'.format(path=output_dirpath, channel_index=str(channel))
-            time_graph_output_name = '{0}/{1}'.format(output_graph_dirpath, str(channel))
+            #time_graph_output_name = '{0}/{1}'.format(output_graph_dirpath, str(channel))
             generate_spectrogram_from_data(channel, FREQUENCY, M, data, channel_output_name)
-            generate_graph_from_data(channel, data, time_graph_output_name)
+            #generate_graph_from_data(channel, data, time_graph_output_name)
 
 
 if __name__ == '__main__':
