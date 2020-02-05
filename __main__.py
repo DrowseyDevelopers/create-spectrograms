@@ -28,12 +28,12 @@ DROWSEY_DATA = [153601, 230400]
 DATA_FILES_PATH = os.path.join(CWD, 'data') # constant representing directory path to data files
 OUTPUT_PATH = os.path.join(CWD, 'output')   # constant representing directory of generated files
 STATE_DATA_OUTPUT = os.path.join(CWD, 'state-data')
-TIME_DOMAIN_OUTPUT_PATH = os.path.join(CWD, 'time-domain-output')
-MAT = '.mat'
+CHANNELS = [4, 5, 8, 9, 10, 11, 16]
+
+MAT = '.mat'                                # suffix of input files
 FREQUENCY = 128                             # frequency rate is 128Hz
 M = 128                                     # M = frequency * delta_time = 128 Hz * 15 seconds
 MAX_AMP = 2                                 # Max amplitude for short-time fourier transform graph
-CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
 
 def handle_arguments():
@@ -215,10 +215,7 @@ def main():
     :return None:
     """
     args = handle_arguments()
-
-    # get all files in input files directory
     all_files = get_all_data_files()
-
 
     if args.split_data:
         handle_split_data(all_files, CHANNELS)
@@ -226,9 +223,6 @@ def main():
     exit(0)
     # create directory where we will output short-time fourier transform images to output to
     create_output_directory(OUTPUT_PATH)
-
-    # create directory where we will output time domain graphs
-    #create_output_directory(TIME_DOMAIN_OUTPUT_PATH)
 
     # iterate through all input data files to generate spectrogram image files
     for data_file in all_files:
@@ -243,15 +237,9 @@ def main():
         # full path location of directory we want to create for data file we are analyzing
         output_dirpath = os.path.join(OUTPUT_PATH, output_basename)
 
-        # full path location of directory we want to create for time domain graph
-        output_graph_dirpath = os.path.join(TIME_DOMAIN_OUTPUT_PATH, output_basename)
-
         # make a directory for data file being analyzed in order to generate images for all channels of data file.
         # e.g. ./output/eeg_record2/
         os.mkdir(output_dirpath)
-
-        # e.g. ./time-domain-output/eeg_record2/
-        #os.mkdir(output_graph_dirpath)
 
         # generating all spectrogram files for all channels of a single EEG data file
         # e.g. ./output/eeg_record2/4.png
@@ -260,11 +248,7 @@ def main():
         #      ./output/eeg_record2/16.png
         for channel in CHANNELS:
             channel_output_name = '{path}/{channel_index}'.format(path=output_dirpath, channel_index=str(channel))
-            #time_graph_output_name = '{0}/{1}'.format(output_graph_dirpath, str(channel))
             generate_spectrogram_from_data(channel, FREQUENCY, M, data, channel_output_name)
-            #generate_graph_from_data(channel, data, time_graph_output_name)
-            break
-        break
 
 
 if __name__ == '__main__':
