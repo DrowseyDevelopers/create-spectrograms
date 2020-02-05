@@ -54,7 +54,7 @@ def output_data_to_csv(output_dir, data, state, filename):
     Function used to parse out focused data and output it into csv files
     :param output_dir: directory to output data
     :param data: to output to csv
-    :param state: state we are outputtin to csv e.g., focused, unfocused or drowsy
+    :param state: state we are outputting to csv e.g., focused, unfocused or drowsy
     :param filename: name of file we are writing data to
     :return None:
     """
