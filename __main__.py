@@ -96,9 +96,6 @@ def handle_split_data(input_files, channels):
             output_data_to_csv(channel_dir, data[:, channel], DROWSEY_DATA, 'DROWSY')
 
 
-
-
-
 def get_all_data_files():
     """
     Function used to get string values of all files in a directory e.g.
@@ -219,36 +216,6 @@ def main():
 
     if args.split_data:
         handle_split_data(all_files, CHANNELS)
-
-    exit(0)
-    # create directory where we will output short-time fourier transform images to output to
-    create_output_directory(OUTPUT_PATH)
-
-    # iterate through all input data files to generate spectrogram image files
-    for data_file in all_files:
-
-        # data from a single file
-        data = load_data_from_file(data_file)
-
-        # name of the output image file
-        output_basename = os.path.basename(data_file)
-        output_basename = output_basename.split('.')[0]
-
-        # full path location of directory we want to create for data file we are analyzing
-        output_dirpath = os.path.join(OUTPUT_PATH, output_basename)
-
-        # make a directory for data file being analyzed in order to generate images for all channels of data file.
-        # e.g. ./output/eeg_record2/
-        os.mkdir(output_dirpath)
-
-        # generating all spectrogram files for all channels of a single EEG data file
-        # e.g. ./output/eeg_record2/4.png
-        #      ./output/eeg_record2/5.png
-        #      ...
-        #      ./output/eeg_record2/16.png
-        for channel in CHANNELS:
-            channel_output_name = '{path}/{channel_index}'.format(path=output_dirpath, channel_index=str(channel))
-            generate_spectrogram_from_data(channel, FREQUENCY, M, data, channel_output_name)
 
 
 if __name__ == '__main__':
