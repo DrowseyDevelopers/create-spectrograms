@@ -6,7 +6,7 @@
          ----------          ------------------------------          --------------------
 """
 
-from scipy import signal        # imports to make spectrogram images
+from scipy import signal  # imports to make spectrogram images
 import matplotlib.pyplot as plt
 
 import shutil
@@ -23,14 +23,14 @@ FOCUSED_DATA = [0, 76801]
 UNFOCUSED_DATA = [76801, 153600]
 DROWSEY_DATA = [153601, 230400]
 
-DATA_FILES_PATH = os.path.join(CWD, 'data') # constant representing directory path to data files
+DATA_FILES_PATH = os.path.join(CWD, 'data')  # constant representing directory path to data files
 STATE_DATA_OUTPUT = os.path.join(CWD, 'state-data')
 CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
-MAT = '.mat'                                # suffix of input files
-FREQUENCY = 128                             # frequency rate is 128Hz
-M = 128                                     # M = frequency * delta_time = 128 Hz * 15 seconds
-MAX_AMP = 2                                 # Max amplitude for short-time fourier transform graph
+MAT = '.mat'  # suffix of input files
+FREQUENCY = 128  # frequency rate is 128Hz
+M = 128  # M = frequency * delta_time = 128 Hz * 15 seconds
+MAX_AMP = 2  # Max amplitude for short-time fourier transform graph
 
 
 def handle_arguments():
@@ -41,7 +41,11 @@ def handle_arguments():
     parser = argparse.ArgumentParser(description='Split EEG data preprocess and create spectrograms')
 
     parser.add_argument('-s', '--split', action='store_true', default=False, dest='split_data',
-            help='Flag used to split the data: Focused, Unfocused, and Drowsy data sets')
+                        help='Flag used to split the data: Focused, Unfocused, and Drowsy data sets')
+
+    parser.add_argument('-i', '--images', dest='state',
+                        help="""Flag used to determine what mental state we want to create spectrogram images for
+                        STATE=[FOCUSED, UNFOCUSED, DROWSY]""")
 
     return parser.parse_args()
 
@@ -224,4 +228,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
