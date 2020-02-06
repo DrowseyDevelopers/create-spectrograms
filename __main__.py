@@ -21,7 +21,7 @@ CWD = os.path.dirname(os.path.realpath(__file__))
 # Ranges of data points representing a certain mental state e.g. focused, unfocused or drowsy
 FOCUSED_DATA = [0, 76801]
 UNFOCUSED_DATA = [76801, 153600]
-DROWSEY_DATA = [153601, 230400]
+DROWSY_DATA = [153601, 230400]
 
 DATA_FILES_PATH = os.path.join(CWD, 'data')  # constant representing directory path to data files
 STATE_DATA_OUTPUT = os.path.join(CWD, 'state-data')
@@ -47,28 +47,6 @@ def handle_arguments():
                         help='Flag used to determine what mental state we want to create spectrogram images for')
 
     return parser.parse_args()
-
-
-def output_data_to_csv(output_dir, data, state, filename):
-    """
-    Function used to parse out focused data and output it into csv files
-    :param output_dir: directory to output data
-    :param data: to output to csv
-    :param state: state we are outputting to csv e.g., focused, unfocused or drowsy
-    :param filename: name of file we are writing data to
-    :return None:
-    """
-
-    output_path = os.path.join(output_dir, filename)
-
-    try:
-        parsed_data = np.array(data[range(state[0], state[1])])
-    except IndexError as e:
-        print('File: {0}'.format(output_path))
-        print('Size: {0}'.format(len(data)))
-        return
-
-    np.savetxt(output_path, parsed_data, delimiter=',')
 
 
 def handle_split_data(input_files, channels):
@@ -100,7 +78,22 @@ def handle_split_data(input_files, channels):
 
             output_data_to_csv(channel_dir, data[:, channel], FOCUSED_DATA, 'FOCUSED')
             output_data_to_csv(channel_dir, data[:, channel], UNFOCUSED_DATA, 'UNFOCUSED')
-            output_data_to_csv(channel_dir, data[:, channel], DROWSEY_DATA, 'DROWSY')
+            output_data_to_csv(channel_dir, data[:, channel], DROWSY_DATA, 'DROWSY')
+
+
+def handle_create_spectrograms(state):
+    """
+    Function used to determine what what state (e.g., FOCUSED, UNFOCUSED, DROWSY, or ALL) spectrogram
+    images to create
+    :param state:
+    :return None:
+    """
+    states = []
+
+    if state == 'ALL':
+        states = ['FOCUSED', 'UNFOCUSED', 'DROWSY']
+    else:
+        states = [state]
 
 
 def get_all_data_files():
@@ -213,20 +206,42 @@ def create_output_directory(output_path):
     os.mkdir(output_path)
 
 
+def output_data_to_csv(output_dir, data, state, filename):
+    """
+    Function used to parse out focused data and output it into csv files
+    :param output_dir: directory to output data
+    :param data: to output to csv
+    :param state: state we are outputting to csv e.g., focused, unfocused or drowsy
+    :param filename: name of file we are writing data to
+    :return None:
+    """
+
+    output_path = os.path.join(output_dir, filename)
+
+    try:
+        parsed_data = np.array(data[range(state[0], state[1])])
+    except IndexError as e:
+        print('File: {0}'.format(output_path))
+        print('Size: {0}'.format(len(data)))
+        return
+
+    np.savetxt(output_path, parsed_data, delimiter=',')
+
+
 def main():
     """
     Main Entrance of program
     :return None:
     """
     args = handle_arguments()
-    all_files = get_all_data_files()
 
-    if args.state:
-        print('yay {0}'.format(args.state))
-    exit(0)
+    all_files = get_all_data_files()
 
     if args.split_data:
         handle_split_data(all_files, CHANNELS)
+
+    if args.state:
+        handle_create_spectrograms(args.state)
 
 
 if __name__ == '__main__':
