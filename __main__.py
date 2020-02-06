@@ -30,7 +30,7 @@ CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
 MAT = '.mat'  # suffix of input files
 FREQUENCY = 128  # frequency rate is 128Hz
-M = 128  # M = frequency * delta_time = 128 Hz * 15 seconds
+M = 256  # M  = window = frequency * delta_time = 128 Hz * 2 seconds
 MAX_AMP = 2  # Max amplitude for short-time fourier transform graph
 
 
@@ -117,6 +117,12 @@ def handle_create_spectrograms(state):
 
             os.makedirs(output_filepath)
 
+            # need to get data from file
+            data = load_raw_state_data(filename)
+
+            output_image = os.path.join(output_filepath, curr_state)
+
+            generate_spectrogram_from_data(FREQUENCY, M, data, output_image)
 
 def get_all_data_files():
     """
@@ -137,6 +143,17 @@ def get_all_data_files():
                 all_files.append(complete_path_to_file)
 
     return all_files
+
+
+def load_raw_state_data(path_to_file):
+    """
+    Function to load raw state data from a csv file
+    :param path_to_file: the path to file we want to read
+    :return data: raw data from file
+    """
+    data = np.genfromtxt(path_to_file)
+
+    return data
 
 
 def load_data_from_file(path_to_file):
@@ -174,22 +191,20 @@ def generate_stft_from_data(channel, fs, m, max_amp, data, output_filepath):
     plt.savefig(output_filepath)
 
 
-def generate_spectrogram_from_data(channel, fs, m, data, output_filepath):
+def generate_spectrogram_from_data(fs, m, data, output_filepath):
     """
     Function used to generate Spectrogram images
-    :param channel: channel of the data we are analyzing
     :param fs: frequency sample rate e.g. 128 Hz
     :param m: total number of points in window e.g. 128
     :param data: complete dataset from an input file
     :param output_filepath: path to export file of spectrogram
     :return None:
     """
-    f, t, Sxx = signal.spectrogram(data[0:76800, channel], fs, noverlap=230, window=signal.tukey(256, 0.25))
+    f, t, Sxx = signal.spectrogram(data, fs, noverlap=230, window=signal.tukey(m, 0.25))
 
     plt.pcolormesh(t, f, np.log10(Sxx))
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
-    plt.title('Lead: {0}'.format(str(channel)))
     plt.set_cmap('jet')
 
     plt.savefig(output_filepath)
