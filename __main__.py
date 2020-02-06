@@ -12,10 +12,8 @@ import matplotlib.pyplot as plt
 import shutil
 import numpy as np
 import os
-import pandas as pd             # data processing
 import scipy.io
 import argparse
-import csv
 
 KEYS = ['id', 'tag', 'nS', 'sampFreq', 'marker', 'timestamp', 'data', 'trials']
 CWD = os.path.dirname(os.path.realpath(__file__))
@@ -26,7 +24,6 @@ UNFOCUSED_DATA = [76801, 153600]
 DROWSEY_DATA = [153601, 230400]
 
 DATA_FILES_PATH = os.path.join(CWD, 'data') # constant representing directory path to data files
-OUTPUT_PATH = os.path.join(CWD, 'output')   # constant representing directory of generated files
 STATE_DATA_OUTPUT = os.path.join(CWD, 'state-data')
 CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
