@@ -1,6 +1,9 @@
 # ignore output files directory
 output/
 state-data/
+FOCUSED/
+UNFOCUSED/
+DROWSY/
 
 # Add other dirs to ignore based on IDE
 ## PyCharm
