@@ -14,6 +14,7 @@ import numpy as np
 import os
 import scipy.io
 import argparse
+import glob
 
 KEYS = ['id', 'tag', 'nS', 'sampFreq', 'marker', 'timestamp', 'data', 'trials']
 CWD = os.path.dirname(os.path.realpath(__file__))
@@ -94,6 +95,27 @@ def handle_create_spectrograms(state):
         states = ['FOCUSED', 'UNFOCUSED', 'DROWSY']
     else:
         states = [state]
+
+    # need to check if state-data directory exists in path
+    if not os.path.isdir(STATE_DATA_OUTPUT):
+        print('Error: Directory \'{0}\' with raw input data doesnt exists!'.format(STATE_DATA_OUTPUT))
+        exit(1)
+
+    # iterate through states that we need to generate spectrogram images for
+    for curr_state in states:
+        output_root = os.path.join(CWD, curr_state)
+
+        create_output_directory(output_root)
+
+        path_to_search = os.path.join(STATE_DATA_OUTPUT, '**', curr_state)
+        state_data_files = glob.glob(path_to_search, recursive=True)
+
+        for filename in state_data_files:
+            output_subpath = filename.replace(STATE_DATA_OUTPUT, '')
+            output_subpath = output_subpath.replace(curr_state, '')
+            output_filepath = '{0}{1}'.format(output_root, output_subpath)
+
+            os.makedirs(output_filepath)
 
 
 def get_all_data_files():
