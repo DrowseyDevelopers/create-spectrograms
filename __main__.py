@@ -43,9 +43,8 @@ def handle_arguments():
     parser.add_argument('-s', '--split', action='store_true', default=False, dest='split_data',
                         help='Flag used to split the data: Focused, Unfocused, and Drowsy data sets')
 
-    parser.add_argument('-i', '--images', dest='state',
-                        help="""Flag used to determine what mental state we want to create spectrogram images for
-                        STATE=[FOCUSED, UNFOCUSED, DROWSY]""")
+    parser.add_argument('-i', '--images', dest='state', choices=['FOCUSED', 'UNFOCUSED', 'DROWSY', 'ALL'],
+                        help='Flag used to determine what mental state we want to create spectrogram images for')
 
     return parser.parse_args()
 
@@ -221,6 +220,10 @@ def main():
     """
     args = handle_arguments()
     all_files = get_all_data_files()
+
+    if args.state:
+        print('yay {0}'.format(args.state))
+    exit(0)
 
     if args.split_data:
         handle_split_data(all_files, CHANNELS)
