@@ -21,11 +21,6 @@ create-spectrograms repo used to generate spectrograms from EEG data.
 create-spectrogram/data/*.mat
 ```
 
-**Output:** Spectrogram files generated in directory **output**
-```
-create-spectrogram/output/
-```
-
 ## Clone Repository
 We have another repository as a submodule, therefore we need to clone
 recursively. Thus:
@@ -43,12 +38,49 @@ numpy==1.17.3
 pandas==0.25.2
 ```
 
+### Script Help
+To see what command line arguments can be passed to the **__main__.py** script run:
+```
+python3 __main__.py --help
+```
+
+
+## Split Data into FOCUSED, UNFOCUSED, and DROWSY states
+In order to split up the data by attention state classification into
+a directory called **state-data**
+you need to run command:
+```
+python3 __main__.py --split
+```
+
 ## Generate Spectrogram Images
 You need to make sure to have the **data** repository at **create-spectrogram/data**.
-If so to get spectrogram image files run command:
+You also need to have **create-spectrogram/split-data** directory of raw state data
+
+
+To generate FOCUSED state spectrograms run:
 ```
-python3 __main__.py
+python3 __main__.py -i FOCUSED
 ```
+
+
+To generate UNFOCUSED state spectrograms run:
+```
+python3 __main__.py -i UNFOCUSED
+```
+
+
+To generate DROWSY state spectrograms run:
+```
+python3 __main__.py -i UNFOCUSED
+```
+
+
+To generate all spectrograms for states FOCUSED, UNFOCUSED, and DROWSY run:
+```
+python3 __main__.py -i ALL
+```
+
 
 ## Data Columns -> Channel Mapping
 MatLab Columns
