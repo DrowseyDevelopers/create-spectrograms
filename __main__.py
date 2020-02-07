@@ -124,6 +124,7 @@ def handle_create_spectrograms(state):
 
             generate_spectrogram_from_data(FREQUENCY, M, data, output_image)
 
+
 def get_all_data_files():
     """
     Function used to get string values of all files in a directory e.g.
