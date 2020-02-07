@@ -72,7 +72,7 @@ python3 __main__.py -i UNFOCUSED
 
 To generate DROWSY state spectrograms run:
 ```
-python3 __main__.py -i UNFOCUSED
+python3 __main__.py -i DROWSY
 ```
 
 
