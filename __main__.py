@@ -15,6 +15,7 @@ import os
 import scipy.io
 import argparse
 import glob
+import math
 
 KEYS = ['id', 'tag', 'nS', 'sampFreq', 'marker', 'timestamp', 'data', 'trials']
 CWD = os.path.dirname(os.path.realpath(__file__))
@@ -30,7 +31,7 @@ CHANNELS = [4, 5, 8, 9, 10, 11, 16]
 
 MAT = '.mat'  # suffix of input files
 FREQUENCY = 128  # frequency rate is 128Hz
-M = 256  # M  = window = frequency * delta_time = 128 Hz * 2 seconds
+M = 64
 MAX_AMP = 2  # Max amplitude for short-time fourier transform graph
 
 
@@ -122,7 +123,8 @@ def handle_create_spectrograms(state):
 
             output_image = os.path.join(output_filepath, curr_state)
 
-            generate_spectrogram_from_data(FREQUENCY, M, data, output_image)
+            # 128, 256, 10mins, ./FOCUSED/eeg_record7/10/FOCUSED
+            interate_data(FREQUENCY, M, data, output_image)
 
 
 def get_all_data_files():
@@ -201,7 +203,9 @@ def generate_spectrogram_from_data(fs, m, data, output_filepath):
     :param output_filepath: path to export file of spectrogram
     :return None:
     """
-    f, t, Sxx = signal.spectrogram(data, fs, noverlap=230, window=signal.tukey(m, 0.25))
+    overlap = math.floor(m * 0.9)
+
+    f, t, Sxx = signal.spectrogram(data, fs, noverlap=overlap, window=signal.tukey(m, 0.25))
 
     plt.pcolormesh(t, f, np.log10(Sxx))
     plt.ylabel('Frequency [Hz]')
@@ -228,6 +232,33 @@ def generate_graph_from_data(channel, data, output_filepath):
     plt.ylabel('MicroVolts [muV]')
 
     plt.savefig(output_filepath)
+
+
+def interate_data(fs, m, data, output_file):
+    """
+    Function used to interate through data and generate spectrogram images
+    :param fs:
+    :param m:
+    :param data:
+    :param output_file:
+    :return:
+    """
+    move = 128
+    i = 0
+    j = 256
+    counter = 1
+
+    while i < len(data):
+        sub_data = data[i:j]
+
+        # FOCUSED/eeg_record7/10/FOCUSED_1
+        sub_output_file = '{0}_{1}'.format(output_file, str(counter))
+
+        generate_spectrogram_from_data(fs, m, sub_data, sub_output_file)
+
+        i += move
+        j += move
+        counter += 1
 
 
 def create_output_directory(output_path):
