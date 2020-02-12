@@ -248,7 +248,7 @@ def interate_data(fs, m, data, output_file):
     j = 256
     counter = 1
 
-    while i < len(data):
+    while j < len(data):
         sub_data = data[i:j]
 
         # FOCUSED/eeg_record7/10/FOCUSED_1
