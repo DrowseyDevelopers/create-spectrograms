@@ -8,7 +8,7 @@
 
 from scipy import signal  # imports to make spectrogram images
 import matplotlib.pyplot as plt
-
+matplotlib.use('Agg')
 import shutil
 import numpy as np
 import os
@@ -16,6 +16,8 @@ import scipy.io
 import argparse
 import glob
 import math
+
+np.seterr(divide='raise')
 
 KEYS = ['id', 'tag', 'nS', 'sampFreq', 'marker', 'timestamp', 'data', 'trials']
 CWD = os.path.dirname(os.path.realpath(__file__))
@@ -207,12 +209,15 @@ def generate_spectrogram_from_data(fs, m, data, output_filepath):
 
     f, t, Sxx = signal.spectrogram(data, fs, noverlap=overlap, window=signal.tukey(m, 0.25))
 
-    plt.pcolormesh(t, f, np.log10(Sxx))
-    plt.ylabel('Frequency [Hz]')
-    plt.xlabel('Time [sec]')
-    plt.set_cmap('jet')
+    try:
+        plt.pcolormesh(t, f, np.log10(Sxx))
+        plt.set_cmap('jet')
+        plt.axis('off')
 
-    plt.savefig(output_filepath)
+        plt.savefig(output_filepath, bbox_inches='tight', pad_inches=0)
+    except FloatingPointError as e
+        print('Caught divide by 0 error: {0}'.format(output_file))
+        return
 
 
 def generate_graph_from_data(channel, data, output_filepath):
