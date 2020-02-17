@@ -7,8 +7,9 @@
 """
 
 from scipy import signal  # imports to make spectrogram images
-import matplotlib.pyplot as plt
+import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import shutil
 import numpy as np
 import os
@@ -214,7 +215,7 @@ def generate_spectrogram_from_data(fs, m, data, output_filepath):
         plt.set_cmap('jet')
         plt.axis('off')
 
-        plt.savefig(output_filepath, bbox_inches='tight', pad_inches=0)
+        plt.savefig(output_filepath, bbox_inches='tight', pad_inches=0, dpi=35)
     except FloatingPointError as e:
         print('Caught divide by 0 error: {0}'.format(output_file))
         return
