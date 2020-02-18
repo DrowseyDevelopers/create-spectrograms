@@ -218,7 +218,7 @@ def generate_spectrogram_from_data(fs, m, data, output_filepath):
         plt.savefig(output_filepath, bbox_inches='tight', pad_inches=0, dpi=35)
         plt.clf()
     except FloatingPointError as e:
-        print('Caught divide by 0 error: {0}'.format(output_file))
+        print('Caught divide by 0 error: {0}'.format(output_filepath))
         return
 
 
